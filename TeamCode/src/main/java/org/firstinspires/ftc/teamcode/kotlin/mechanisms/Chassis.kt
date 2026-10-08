@@ -2,18 +2,30 @@ package org.firstinspires.ftc.teamcode.kotlin.mechanisms
 
 import dev.nextftc.hardware.actuators.NextMotor
 import dev.nextftc.robot.Mechanism
+import dev.nextftc.robot.triggers.CommandGamepad
 
 class Chassis: Mechanism {
-    val lf = NextMotor("LF").apply { direction = NextMotor.Direction.REVERSE}
+    val lf = NextMotor("LF")
     val lb = NextMotor("LB")
-    val rf = NextMotor("RF").apply { direction = NextMotor.Direction.REVERSE}
+    val rf = NextMotor("RF")
     val rb = NextMotor("RB")
 
-    fun mover(power: Double) {
-        lf.throttle = power
-        lb.throttle = power
-        rf.throttle = power
-        rb.throttle = power
+
+    fun manejar(gp: CommandGamepad) = infinite {
+        var x = gp.rightStickX.value
+        var y = gp.rightStickY.value
+        var z = gp.leftStickX.value
+
+        var lfPower = x + y +z
+        var rfPower = x - y - z
+        var lbPower = x - y + z
+        var rbPower = x + y - z
+
+        lf.throttle = lfPower
+        rf.throttle = rfPower
+        lb.throttle = lbPower
+        rb.throttle = rbPower
+
     }
     fun parar()= instant {
         lf.throttle = 0.0
